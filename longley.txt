@@ -1,0 +1,118 @@
+#setting working diectory
+setwd("I:\\Datascience\\R\\case_study")
+
+#checking that correct dataset has been configured
+getwd()
+
+#structure of dataset
+str(longley)
+
+#assning to lng
+df<-longley
+
+#to check first 6 rows
+head(df)
+
+#to check last 6 rows
+
+tail(df)
+
+#set due to everyone in same value
+
+set.seed(123)
+
+# view dataset
+
+view(df)
+
+str(df)
+
+#fivenum to get acending fivenumber
+
+fivenum(df$GNP)
+# To check the mean of GNP in the dataset
+mean(df$GNP)
+# To check the standard deviation of GNP
+sd(df$GNP)
+
+
+#Unemployed
+hist(df$Unemployed,xlab = "No of unemployed",col = "green",main = "Unemployed india")
+skewness(df$Unemployed)
+scatter.smooth(df$Unemployed)
+boxplot(df$Unemployed)
+kurtosis(df$Unemployed)
+cor(df$Unemployed,df$Employed)
+
+#population
+str(df)
+hist(df$Population,xlab = "total population",col = "red",main = "population in india")
+skewness(df$Population)
+scatter.smooth(df$Population)
+boxplot(df$Population)
+kurtosis(df$Population)
+cor(df$Population,df$Employed)
+
+#ggplot
+
+install.packages("ggplot2")
+install.packages("moments")
+
+library(ggplot2)
+library(moments)
+
+ggplot(df,aes_string(df$Employed,df$Population,group=df$Employed))+geom_boxplot()+
+  ggtitle(paste('boxplot of employed',df$Employed,'vs',df$Population))
+
+#run pairs command for dataset
+
+pairs(df)
+
+
+#splitting of dataset
+
+sampl<-sample(1:nrow(df),.7*(nrow(df)))
+str(sampl)
+
+# to create train sample
+
+lng_train<-df[sampl,]
+nrow(lng_train)
+
+
+
+# to create test sample
+
+lng_test<-df[-sampl,]
+nrow(lng_test)
+
+# creating correlation check func
+cor_check<-cor(lng_train)
+
+# install cor plot
+
+install.packages("corrplot")
+library(corrplot)
+
+# to create corrlation between all variable in circle
+
+
+corrplot(cor_check,type = "lower",method = "circle")
+
+
+# to create corrlation between all variable in number
+
+corrplot(cor_check,type = "lower",method = "number")
+
+# to cretate linear model
+
+lin_model<-lm(Employed ~.,data = lng_train)
+str(lin_model)
+
+# To check the precticted data and create the same
+prdt_test<-predict(lin_model,newdata = lng_train)
+str(prdt_test)
+
+summary(prdt_test)
+
+
